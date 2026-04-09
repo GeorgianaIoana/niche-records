@@ -1,0 +1,17 @@
+import { Header, Footer } from "@/components/layout";
+import { CartDrawer } from "@/components/cart";
+
+export default function ShopLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <Header />
+      <main className="min-h-screen">{children}</main>
+      <Footer />
+      <CartDrawer />
+    </>
+  );
+}

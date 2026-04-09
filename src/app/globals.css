@@ -1,26 +1,277 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Colors - Bleu de Chanel Palette */
+  --color-bleu-deepest: #030810;
+  --color-bleu-deep: #071018;
+  --color-bleu-dark: #0a1620;
+  --color-bleu: #0d1a28;
+  --color-bleu-medium: #122535;
+  --color-bleu-light: #1a3045;
+  --color-bleu-glow: #1e3a50;
+
+  --color-gold: #D4B87A;
+  --color-gold-light: #E5C98A;
+  --color-gold-dark: #C4A35A;
+
+  --color-white: #FFFFFF;
+  --color-gray-100: #E8ECF0;
+  --color-gray-200: #C5CDD5;
+  --color-gray-300: #9EAAB8;
+  --color-gray-400: #7A8A9A;
+  --color-gray-500: #5A6A7A;
+  --color-gray-600: #3A4A5A;
+
+  --color-navy: var(--color-bleu-dark);
+  --color-navy-light: var(--color-bleu-medium);
+  --color-navy-dark: var(--color-bleu-deep);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Serif font utility */
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+/* Film grain texture overlay */
+.grain-overlay {
+  position: relative;
+}
+
+.grain-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Floating ambient light orbs */
+.ambient-lights {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.light-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+  animation: float-orb 20s ease-in-out infinite;
+}
+
+.light-orb--gold {
+  background: radial-gradient(circle, var(--color-gold) 0%, transparent 70%);
+}
+
+.light-orb--warm {
+  background: radial-gradient(circle, var(--color-gold-light) 0%, transparent 70%);
+}
+
+.light-orb--soft {
+  background: radial-gradient(circle, rgba(212, 184, 122, 0.6) 0%, transparent 70%);
+}
+
+/* Orb 1 - Large, slow drift top-left to center */
+.light-orb--1 {
+  width: 500px;
+  height: 500px;
+  top: -10%;
+  left: -10%;
+  animation-duration: 25s;
+  animation-delay: 0s;
+}
+
+/* Orb 2 - Medium, drift right side */
+.light-orb--2 {
+  width: 350px;
+  height: 350px;
+  top: 20%;
+  right: -5%;
+  animation-duration: 22s;
+  animation-delay: -8s;
+}
+
+/* Orb 3 - Small, center-bottom area */
+.light-orb--3 {
+  width: 280px;
+  height: 280px;
+  bottom: 10%;
+  left: 30%;
+  animation-duration: 18s;
+  animation-delay: -4s;
+}
+
+/* Orb 4 - Extra large, very subtle background */
+.light-orb--4 {
+  width: 600px;
+  height: 600px;
+  top: 40%;
+  right: 20%;
+  animation-duration: 30s;
+  animation-delay: -12s;
+  opacity: 0;
+}
+
+@keyframes float-orb {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.8);
+  }
+  15% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.25;
+    transform: translate(50px, 30px) scale(1);
+  }
+  85% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.8);
   }
 }
 
+/* Alternative subtle pulse for some orbs */
+@keyframes pulse-orb {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.1);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bleu-dark);
+  color: var(--color-white);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-gold);
+  color: var(--color-bleu-deepest);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bleu-light);
+}
+
+*:focus-visible {
+  outline: 1px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Simple hover underline */
+.hover-line {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-line::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.hover-line:hover::after {
+  width: 100%;
+}
+
+/* Smooth image zoom on hover */
+.image-zoom {
+  overflow: hidden;
+}
+
+.image-zoom img {
+  transition: transform 0.5s ease;
+}
+
+.image-zoom:hover img {
+  transform: scale(1.05);
+}
+
+/* Text balance for headlines */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Photo Carousel - Rough Trade style */
+.photo-carousel-track {
+  display: flex;
+  gap: 1rem;
+  animation: scroll-photos 40s linear infinite;
+  width: max-content;
+}
+
+.photo-carousel-track:hover {
+  animation-play-state: paused;
+}
+
+.photo-carousel-item {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.photo-carousel-item:hover {
+  transform: rotate(0deg) scale(1.05) !important;
+  z-index: 10;
+}
+
+.photo-frame {
+  background: white;
+  padding: 8px 8px 24px 8px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 10px 20px -5px rgba(0, 0, 0, 0.15);
+}
+
+.photo-image {
+  display: block;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.photo-carousel-item:hover .photo-image {
+  filter: grayscale(0%);
+}
+
+@keyframes scroll-photos {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
