@@ -1,6 +1,7 @@
 export { Hero } from "./hero";
 export { HeroCarousel } from "./hero-carousel";
 export { HeroStatic } from "./hero-static";
+export { HeroVinyl } from "./hero-vinyl";
 export { CategoryNav } from "./category-nav";
 export { CategoryShowcase } from "./category-showcase";
 export { FeaturedProducts } from "./featured-products";
@@ -9,3 +10,5 @@ export { ProductSection } from "./product-section";
 export { ProductRow } from "./product-row";
 export { Newsletter } from "./newsletter";
 export { PhotoCarousel } from "./photo-carousel";
+export { Testimonials } from "./testimonials";
+export { TrustBadges } from "./trust-badges";

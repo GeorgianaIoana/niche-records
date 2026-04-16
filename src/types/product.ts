@@ -18,6 +18,7 @@ export interface Product {
   name: string;
   artist: string;
   price: number; // In bani (cents equivalent)
+  salePrice?: number; // Original price if on sale
   category: Category;
   format: Format;
   genre: string[];

@@ -111,6 +111,7 @@ export function TiltedCard({
           style={{
             width: imageWidth,
             height: imageHeight,
+            backgroundColor: "#0a2736",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -120,8 +121,13 @@ export function TiltedCard({
             className="w-full h-full object-cover"
           />
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          {/* Gradient overlay - dark blue bottom, light blue top */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(to bottom, rgba(56, 140, 180, 0.3) 0%, transparent 30%, rgba(10, 39, 54, 0.4) 60%, rgba(10, 39, 54, 0.9) 100%)",
+            }}
+          />
 
           {/* Overlay content */}
           {displayOverlayContent && overlayContent && (

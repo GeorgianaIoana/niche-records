@@ -48,6 +48,101 @@ function createTextTexture(gl: any, text: string, font = 'bold 30px monospace', 
   return { texture, width: canvas.width, height: canvas.height };
 }
 
+async function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function createTestimonialTexture(gl: any, testimonial: string, author: string, image?: HTMLImageElement) {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d')!;
+
+  // Card dimensions
+  canvas.width = 400;
+  canvas.height = 500;
+
+  // Draw image if available
+  if (image) {
+    // Calculate cover fit
+    const imgRatio = image.width / image.height;
+    const canvasRatio = canvas.width / canvas.height;
+    let drawWidth, drawHeight, drawX, drawY;
+
+    if (imgRatio > canvasRatio) {
+      drawHeight = canvas.height;
+      drawWidth = image.width * (canvas.height / image.height);
+      drawX = (canvas.width - drawWidth) / 2;
+      drawY = 0;
+    } else {
+      drawWidth = canvas.width;
+      drawHeight = image.height * (canvas.width / image.width);
+      drawX = 0;
+      drawY = (canvas.height - drawHeight) / 2;
+    }
+
+    context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+
+    // Dark gradient overlay for text readability
+    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, 'rgba(10, 21, 32, 0.3)');
+    gradient.addColorStop(0.5, 'rgba(10, 21, 32, 0.5)');
+    gradient.addColorStop(1, 'rgba(10, 21, 32, 0.9)');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  } else {
+    // Fallback gradient background
+    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#1a2a3a');
+    gradient.addColorStop(1, '#0a1520');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Quote icon
+  context.font = 'bold 60px Georgia';
+  context.fillStyle = 'rgba(255, 255, 255, 0.15)';
+  context.fillText('"', 30, 80);
+
+  // Testimonial text - wrap lines
+  context.font = '20px Questrial, sans-serif';
+  context.fillStyle = '#ffffff';
+  context.textAlign = 'left';
+  context.textBaseline = 'top';
+
+  const maxWidth = canvas.width - 60;
+  const lineHeight = 28;
+  const words = testimonial.split(' ');
+  let line = '';
+  let y = 120;
+
+  for (let i = 0; i < words.length; i++) {
+    const testLine = line + words[i] + ' ';
+    const metrics = context.measureText(testLine);
+    if (metrics.width > maxWidth && i > 0) {
+      context.fillText(line.trim(), 30, y);
+      line = words[i] + ' ';
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  context.fillText(line.trim(), 30, y);
+
+  // Author name
+  context.font = '16px Questrial, sans-serif';
+  context.fillStyle = 'rgba(255, 255, 255, 0.7)';
+  context.fillText('— ' + author, 30, canvas.height - 60);
+
+  const texture = new Texture(gl, { generateMipmaps: true });
+  texture.image = canvas;
+  return { texture, width: canvas.width, height: canvas.height };
+}
+
 class Title {
   gl: any;
   plane: any;
@@ -116,13 +211,15 @@ class Media {
   extra: number = 0;
   geometry: any;
   gl: any;
-  image: string;
+  imageSrc?: string;
+  loadedImage?: HTMLImageElement;
   index: number;
   length: number;
   renderer: any;
   scene: any;
   screen: { width: number; height: number };
   text: string;
+  author: string;
   viewport: { width: number; height: number };
   bend: number;
   textColor: string;
@@ -144,12 +241,14 @@ class Media {
     geometry,
     gl,
     image,
+    loadedImage,
     index,
     length,
     renderer,
     scene,
     screen,
     text,
+    author,
     viewport,
     bend,
     textColor,
@@ -158,13 +257,15 @@ class Media {
   }: {
     geometry: any;
     gl: any;
-    image: string;
+    image?: string;
+    loadedImage?: HTMLImageElement;
     index: number;
     length: number;
     renderer: any;
     scene: any;
     screen: { width: number; height: number };
     text: string;
+    author?: string;
     viewport: { width: number; height: number };
     bend: number;
     textColor: string;
@@ -173,13 +274,15 @@ class Media {
   }) {
     this.geometry = geometry;
     this.gl = gl;
-    this.image = image;
+    this.imageSrc = image;
+    this.loadedImage = loadedImage;
     this.index = index;
     this.length = length;
     this.renderer = renderer;
     this.scene = scene;
     this.screen = screen;
     this.text = text;
+    this.author = author || '';
     this.viewport = viewport;
     this.bend = bend;
     this.textColor = textColor;
@@ -187,13 +290,12 @@ class Media {
     this.font = font;
     this.createShader();
     this.createMesh();
-    this.createTitle();
     this.onResize();
   }
   createShader() {
-    const texture = new Texture(this.gl, {
-      generateMipmaps: true
-    });
+    // Create testimonial texture with loaded image
+    const { texture, width, height } = createTestimonialTexture(this.gl, this.text, this.author, this.loadedImage);
+
     this.program = new Program(this.gl, {
       depthTest: false,
       depthWrite: false,
@@ -219,6 +321,7 @@ class Media {
         uniform vec2 uPlaneSizes;
         uniform sampler2D tMap;
         uniform float uBorderRadius;
+        uniform float uCenterProgress;
         varying vec2 vUv;
 
         float roundedBoxSDF(vec2 p, vec2 b, float r) {
@@ -237,6 +340,18 @@ class Media {
           );
           vec4 color = texture2D(tMap, uv);
 
+          // Gradient overlay - dark blue at bottom to light blue at top (all cards)
+          vec3 darkBlue = vec3(0.02, 0.04, 0.06);
+          vec3 lightBlue = vec3(0.08, 0.15, 0.22);
+          float t = 1.0 - vUv.y; // 1 at bottom, 0 at top
+          vec3 gradientColor = mix(lightBlue, darkBlue, t);
+          float overlayStrength = t * 0.7; // gradient fades from bottom to top
+          color.rgb = mix(color.rgb, gradientColor, overlayStrength);
+
+          // Glass effect - subtle edge highlights
+          float edgeHighlight = smoothstep(0.0, 0.02, vUv.x) + smoothstep(1.0, 0.98, vUv.x);
+          color.rgb += vec3(0.5, 0.6, 0.8) * edgeHighlight * 0.06;
+
           float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
 
           // Smooth antialiasing for edges
@@ -249,20 +364,14 @@ class Media {
       uniforms: {
         tMap: { value: texture },
         uPlaneSizes: { value: [0, 0] },
-        uImageSizes: { value: [0, 0] },
+        uImageSizes: { value: [width, height] },
         uSpeed: { value: 0 },
         uTime: { value: 100 * Math.random() },
-        uBorderRadius: { value: this.borderRadius }
+        uBorderRadius: { value: this.borderRadius },
+        uCenterProgress: { value: 0 }
       },
       transparent: true
     });
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = this.image;
-    img.onload = () => {
-      texture.image = img;
-      this.program.uniforms.uImageSizes.value = [img.naturalWidth, img.naturalHeight];
-    };
   }
   createMesh() {
     this.plane = new Mesh(this.gl, {
@@ -309,6 +418,12 @@ class Media {
     this.program.uniforms.uTime.value += 0.04;
     this.program.uniforms.uSpeed.value = this.speed;
 
+    // Calculate center progress (1 when in center, 0 when far)
+    const distanceFromCenter = Math.abs(this.plane.position.x);
+    const maxDistance = this.viewport.width * 0.4;
+    const centerProgress = Math.max(0, 1 - distanceFromCenter / maxDistance);
+    this.program.uniforms.uCenterProgress.value = centerProgress;
+
     const planeOffset = this.plane.scale.x / 2;
     const viewportOffset = this.viewport.width / 2;
     this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
@@ -342,8 +457,9 @@ class Media {
 }
 
 interface GalleryItem {
-  image: string;
+  image?: string;
   text: string;
+  author?: string;
 }
 
 class App {
@@ -399,9 +515,13 @@ class App {
     this.createScene();
     this.onResize();
     this.createGeometry();
-    this.createMedias(items, bend, textColor, borderRadius, font);
-    this.update();
+    this.init(items, bend, textColor, borderRadius, font);
     this.addEventListeners();
+  }
+
+  async init(items?: GalleryItem[], bend?: number, textColor?: string, borderRadius?: number, font?: string) {
+    await this.createMedias(items, bend, textColor, borderRadius, font);
+    this.update();
   }
   createRenderer() {
     this.renderer = new Renderer({
@@ -427,34 +547,45 @@ class App {
       widthSegments: 100
     });
   }
-  createMedias(items?: GalleryItem[], bend = 1, textColor = '#ffffff', borderRadius = 0, font = 'bold 30px Figtree') {
+  async createMedias(items?: GalleryItem[], bend = 1, textColor = '#ffffff', borderRadius = 0, font = 'bold 30px Figtree') {
     const defaultItems: GalleryItem[] = [
-      { image: `https://picsum.photos/seed/1/800/600?grayscale`, text: 'Bridge' },
-      { image: `https://picsum.photos/seed/2/800/600?grayscale`, text: 'Desk Setup' },
-      { image: `https://picsum.photos/seed/3/800/600?grayscale`, text: 'Waterfall' },
-      { image: `https://picsum.photos/seed/4/800/600?grayscale`, text: 'Strawberries' },
-      { image: `https://picsum.photos/seed/5/800/600?grayscale`, text: 'Deep Diving' },
-      { image: `https://picsum.photos/seed/16/800/600?grayscale`, text: 'Train Track' },
-      { image: `https://picsum.photos/seed/17/800/600?grayscale`, text: 'Santorini' },
-      { image: `https://picsum.photos/seed/8/800/600?grayscale`, text: 'Blurry Lights' },
-      { image: `https://picsum.photos/seed/9/800/600?grayscale`, text: 'New York' },
-      { image: `https://picsum.photos/seed/10/800/600?grayscale`, text: 'Good Boy' },
-      { image: `https://picsum.photos/seed/21/800/600?grayscale`, text: 'Coastline' },
-      { image: `https://picsum.photos/seed/12/800/600?grayscale`, text: 'Palm Trees' }
+      { text: 'Calitate excepțională! Vinilurile sună incredibil, exact ca în anii de aur ai muzicii. Ambalajul a fost impecabil, fiecare disc protejat cu grijă. Recomand tuturor pasionaților de muzică!', author: 'Maria D.' },
+      { text: 'Livrare rapidă și ambalaj impecabil. Am comandat 5 viniluri și toate au ajuns în stare perfectă. Serviciul clienți a fost de nota 10, m-au ajutat să găsesc exact ce căutam.', author: 'Andrei P.' },
+      { text: 'Colecția de jazz este fantastică. Am găsit albume rare pe care le căutam de ani de zile. Prețurile sunt foarte competitive față de alte magazine. Voi reveni cu siguranță!', author: 'Elena M.' },
+      { text: 'Cel mai bun magazin de viniluri din România. Prețuri corecte, selecție variată și personal care înțelege cu adevărat pasiunea pentru vinyl. O experiență de cumpărare de 5 stele!', author: 'Cristian T.' },
+      { text: 'Sunetul cald al vinilului nu se compară cu nimic digital. Am redescoperit albumele preferate într-o lumină nouă. Mulțumesc pentru această experiență autentică și pentru sfaturile utile!', author: 'Ana S.' },
+      { text: 'Am comandat pentru prima dată și sunt absolut încântat de calitatea produselor și a serviciilor. Comunicare excelentă, livrare în 24 de ore. Cu siguranță voi reveni pentru mai multe!', author: 'Mihai R.' }
     ];
     const galleryItems = items && items.length ? items : defaultItems;
     this.mediasImages = galleryItems.concat(galleryItems);
+
+    // Load all images first
+    const loadedImages = await Promise.all(
+      this.mediasImages.map(async (data) => {
+        if (data.image) {
+          try {
+            return await loadImage(data.image);
+          } catch {
+            return undefined;
+          }
+        }
+        return undefined;
+      })
+    );
+
     this.medias = this.mediasImages.map((data, index) => {
       return new Media({
         geometry: this.planeGeometry,
         gl: this.gl,
         image: data.image,
+        loadedImage: loadedImages[index],
         index,
         length: this.mediasImages.length,
         renderer: this.renderer,
         scene: this.scene,
         screen: this.screen,
         text: data.text,
+        author: data.author,
         viewport: this.viewport,
         bend,
         textColor,

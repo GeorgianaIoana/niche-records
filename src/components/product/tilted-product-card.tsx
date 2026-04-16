@@ -33,7 +33,7 @@ export function TiltedProductCard({ product, className }: TiltedProductCardProps
             <p className="text-xs text-gray-400 mb-1">
               {product.artist}
             </p>
-            <h3 className="font-serif text-lg leading-tight mb-2">
+            <h3 className="font-heading text-lg font-semibold leading-tight mb-2">
               {product.name}
             </h3>
             <p className="text-sm text-gold">

@@ -3,9 +3,15 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Questrial } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { getFeaturedProducts } from "@/data/products";
 import { formatPrice } from "@/lib/utils";
+
+const questrial = Questrial({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export function HeroCarousel() {
   const [current, setCurrent] = useState(0);
@@ -84,12 +90,17 @@ export function HeroCarousel() {
                 </p>
 
                 {/* Headline */}
-                <h1 className="font-serif text-4xl lg:text-6xl font-light italic text-white mb-4 text-balance">
+                <h1
+                  className={`${questrial.className} text-4xl lg:text-6xl text-white mb-4 text-balance`}
+                  style={{
+                    textShadow: '1px 1px 0 rgba(0,0,0,0.4), 2px 2px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2)',
+                  }}
+                >
                   {product.name}
                 </h1>
 
                 {/* Artist name */}
-                <p className="font-serif text-xl italic text-gray-300 mb-8">
+                <p className={`${questrial.className} text-xl text-gray-300 mb-8 tracking-wider`}>
                   {product.artist}
                 </p>
 
@@ -111,7 +122,7 @@ export function HeroCarousel() {
                   isTransitioning ? "opacity-0" : "opacity-100"
                 )}
               >
-                <p className="text-xs text-gray-500 mb-2">
+                <p className={`${questrial.className} text-xs text-gray-500 mb-2 tracking-wider`}>
                   {product.format}
                 </p>
                 <p className="text-2xl lg:text-3xl font-light text-white mb-8">

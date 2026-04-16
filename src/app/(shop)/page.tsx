@@ -1,5 +1,6 @@
 import {
-  HeroStatic,
+  HeroVinyl,
+  TrustBadges,
   FeaturedProductsSection,
   CategoryShowcase,
   PhotoCarousel,
@@ -12,7 +13,9 @@ export default function HomePage() {
 
   return (
     <>
-      <HeroStatic />
+      <HeroVinyl />
+
+      <TrustBadges />
 
       <FeaturedProductsSection products={featured} />
 

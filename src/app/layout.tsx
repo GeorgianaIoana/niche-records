@@ -1,24 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
+import { Questrial, Geist } from "next/font/google";
 import { Providers } from "@/store";
 import { SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const questrial = Questrial({
+  variable: "--font-questrial",
   subsets: ["latin"],
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  style: ["normal", "italic"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -37,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="ro"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} antialiased`}
+      className={cn("antialiased", questrial.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-screen flex flex-col bg-navy text-white">
         <Providers>{children}</Providers>

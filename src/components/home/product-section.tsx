@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { ProductCard } from "@/components/product";
+import { Questrial, Open_Sans } from "next/font/google";
 import type { Product } from "@/types";
+
+const questrial = Questrial({
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
 
 interface ProductSectionProps {
   title: string;
@@ -22,11 +33,16 @@ export function ProductSection({
         <div className="mb-12 lg:mb-16">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
-              <h2 className="font-serif text-3xl lg:text-4xl font-light text-white">
+              <h2
+                className={`${questrial.className} text-2xl lg:text-3xl text-white uppercase`}
+                style={{
+                  textShadow: '1px 1px 0 rgba(0,0,0,0.4), 2px 2px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2)',
+                }}
+              >
                 {title}
               </h2>
               {subtitle && (
-                <p className="mt-3 text-base text-gray-400 max-w-xl">
+                <p className={`${openSans.className} mt-3 text-base text-gray-400 max-w-xl`}>
                   {subtitle}
                 </p>
               )}

@@ -1,6 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Questrial } from "next/font/google";
 import { getFeaturedProducts } from "@/data/products";
+
+const questrial = Questrial({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export function HeroStatic() {
   const product = getFeaturedProducts()[0];
@@ -41,12 +47,17 @@ export function HeroStatic() {
           </span>
 
           {/* Product name */}
-          <h1 className="font-serif text-5xl lg:text-7xl font-light italic text-white mb-4 text-balance">
+          <h1
+            className={`${questrial.className} text-5xl lg:text-7xl text-white mb-4 text-balance`}
+            style={{
+              textShadow: '1px 1px 0 rgba(0,0,0,0.4), 2px 2px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2)',
+            }}
+          >
             {product.name}
           </h1>
 
           {/* Artist */}
-          <p className="font-serif text-xl lg:text-2xl italic text-gray-300 mb-10">
+          <p className={`${questrial.className} text-xl lg:text-2xl text-gray-300 mb-10 tracking-wider`}>
             {product.artist}
           </p>
 

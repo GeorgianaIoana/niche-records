@@ -1,107 +1,171 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Questrial } from "next/font/google";
+
+const questrial = Questrial({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 const categories = [
   {
-    slug: "cds",
-    name: "CDs",
-    description: "Crystal clear digital sound",
-    image: "https://images.unsplash.com/photo-1629276301820-0f3eedc29571?w=600&h=800&fit=crop",
-  },
-  {
     slug: "vinyls",
     name: "Vinyls",
-    description: "Warm analog experience",
-    image: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=600&h=800&fit=crop",
+    image: "https://vinyl.com/cdn/shop/files/8258495709489_85quality_Fleetwood_Mac_Vinyl_Rumours_LP.webp",
+    productCount: 10,
+  },
+  {
+    slug: "cds",
+    name: "CDs",
+    image: "https://vinyl.com/cdn/shop/files/8258501869873_85quality_Tyler_the_creator_vinyl_igor_LP.webp",
+    productCount: 5,
+  },
+  {
+    slug: "cassettes",
+    name: "Cassettes",
+    image: "https://vinyl.com/cdn/shop/files/8258500198705_85quality_arctic-monkeys-am-lp_1024x1024_b88bbb6b-9eec-460b-80bb-a00687dfa348.webp",
+    productCount: 7,
   },
   {
     slug: "dvds",
     name: "DVDs",
-    description: "Visual music experiences",
-    image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=600&h=800&fit=crop",
+    image: "https://vinyl.com/cdn/shop/files/8258505507121_85quality_paramore_riot_silver_vinyl.webp",
+    productCount: 5,
+  },
+  {
+    slug: "accessories",
+    name: "Accessories",
+    image: "https://vinyl.com/cdn/shop/files/8258503573809_85quality_SZA_vinyl_ctrl_2LP.webp",
+    productCount: 8,
   },
 ];
 
 export function CategoryShowcase() {
   return (
-    <section className="pt-28 pb-36 lg:pt-40 lg:pb-52 relative border-t-[0.5px] border-gold/20">
+    <section className="pt-28 pb-36 lg:pt-40 lg:pb-52 relative border-t-[0.5px] border-gold/20 overflow-hidden">
       {/* Subtle ambient glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 60% 40% at 50% 30%, rgba(30, 58, 80, 0.15) 0%, transparent 60%)',
+          background:
+            "radial-gradient(ellipse 60% 40% at 50% 30%, rgba(30, 58, 80, 0.15) 0%, transparent 60%)",
         }}
       />
 
-      {/* Warm light effects */}
+      {/* Blue light effects */}
       <Image
-        src="/warm-light.svg"
+        src="/blue-light.png"
         alt=""
-        width={288}
-        height={511}
-        className="absolute -top-20 -right-10 pointer-events-none opacity-60"
+        width={450}
+        height={450}
+        className="absolute -top-20 -right-10 pointer-events-none opacity-90"
         aria-hidden="true"
       />
       <Image
-        src="/warm-light.svg"
+        src="/light-glow.png"
         alt=""
-        width={288}
-        height={511}
-        className="absolute bottom-0 -left-20 pointer-events-none opacity-60"
+        width={500}
+        height={500}
+        className="absolute -bottom-20 -left-32 pointer-events-none opacity-80"
         aria-hidden="true"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-extralight text-white tracking-tight mb-4">
-            Shop by Category
+        {/* Header */}
+        <div className="text-center mb-16 lg:mb-24">
+          <h2
+            className={`${questrial.className} text-2xl lg:text-3xl text-white uppercase`}
+            style={{
+              textShadow: '1px 1px 0 rgba(0,0,0,0.4), 2px 2px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2)',
+            }}
+          >
+            Popular Categories
           </h2>
-          <p className="text-gray-400 max-w-xl mx-auto font-light">
-            Choose your preferred way to experience music
+          <p
+            className={`${questrial.className} mt-3 text-lg max-w-xl mx-auto tracking-wider`}
+            style={{
+              background: 'linear-gradient(180deg, #b0e8ff 0%, #c8f0ff 50%, #1e3a50 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            Explorează colecția noastră de viniluri, CD-uri și accesorii
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {categories.map((category, index) => (
-            <Link
-              key={category.slug}
-              href={`/products/${category.slug}`}
-              className={cn(
-                "group relative aspect-[3/4] rounded-2xl overflow-hidden",
-                "border border-[#1e3a50]/30",
-                "transition-all duration-500 hover:-translate-y-2 hover:border-gold/30"
-              )}
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              {/* Image */}
-              <Image
-                src={category.image}
-                alt={category.name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
+        {/* Category Cards - Semicircle arc */}
+        <div
+          className="flex justify-center items-center gap-3 lg:gap-4 px-4"
+          style={{
+            perspective: "1200px",
+            perspectiveOrigin: "center center",
+          }}
+        >
+          {categories.map((category, index) => {
+            const middleIndex = 2;
+            const position = index - middleIndex; // -2, -1, 0, 1, 2
 
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#030810] via-[#030810]/50 to-transparent" />
+            // Smooth arc rotation
+            const rotateY = position * 18;
 
-              {/* Content */}
-              <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                <h3 className="text-2xl font-light text-white mb-2 tracking-wide">
-                  {category.name}
-                </h3>
-                <p className="text-gray-400 text-sm font-light mb-4">
-                  {category.description}
-                </p>
-                <div className="flex items-center text-gold text-sm font-medium tracking-wide">
-                  <span>Explore</span>
-                  <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+            // Arc depth - parabolic curve for natural feel
+            const depth = Math.pow(position, 2);
+            const translateZ = 50 - depth * 20;
+
+            // Pull edge cards inward for tighter arc
+            const translateX = position * -8;
+
+            // Gradual scale reduction toward edges
+            const scale = 1 - Math.abs(position) * 0.06;
+
+            // Progressive shadow intensity
+            const shadowOpacity = 0.25 + (2 - Math.abs(position)) * 0.1;
+
+            return (
+              <Link
+                key={category.slug}
+                href={`/products/${category.slug}`}
+                className="group relative aspect-square rounded-xl overflow-hidden w-full max-w-[220px] flex-shrink-0 transition-all duration-500 ease-out"
+                style={{
+                  transform: `translateX(${translateX}px) rotateY(${rotateY}deg) translateZ(${translateZ}px) scale(${scale})`,
+                  transformStyle: "preserve-3d",
+                  boxShadow: `0 ${20 + (2 - Math.abs(position)) * 10}px ${40 + (2 - Math.abs(position)) * 15}px -10px rgba(0, 0, 0, ${shadowOpacity})`,
+                }}
+              >
+                {/* Background Image */}
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                  sizes="(max-width: 640px) 50vw, 220px"
+                />
+
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                {/* Content */}
+                <div className="absolute inset-0 p-4 lg:p-5 flex flex-col justify-end">
+                  <h3 className="text-lg lg:text-xl font-semibold text-white mb-0.5">
+                    {category.name}
+                  </h3>
+                  <p className={`${questrial.className} text-xs text-white/70 mb-3 tracking-wider`}>
+                    {category.productCount} Products
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gold opacity-0 -translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    Shop Now
+                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
                 </div>
-              </div>
-            </Link>
-          ))}
+
+                {/* Hover border glow */}
+                <div className="absolute inset-0 rounded-xl ring-1 ring-white/10 group-hover:ring-gold/40 transition-all duration-500" />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

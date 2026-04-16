@@ -4,36 +4,59 @@ import { CircularGallery } from "@/components/ui/circular-gallery";
 
 const galleryItems = [
   {
-    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=600&fit=crop",
-    text: "Concert",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&crop=face",
+    text: "Colecția de vinyl e incredibilă!",
+    author: "Andrei M.",
   },
   {
-    image: "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=800&h=600&fit=crop",
-    text: "Record Store",
+    image: "/testimonial-1.jpg",
+    text: "Vinylurile sună absolut fantastic!",
+    author: "Laura B.",
   },
   {
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&h=600&fit=crop",
-    text: "Live Music",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=600&fit=crop&crop=face",
+    text: "Livrare rapidă, calitate premium.",
+    author: "Maria D.",
   },
   {
-    image: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800&h=600&fit=crop",
-    text: "Vinyl Collection",
+    image: "/testimonial-2.jpg",
+    text: "Colecția mea de CD-uri a crescut!",
+    author: "Alexandru N.",
   },
   {
-    image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=600&fit=crop",
-    text: "Festival",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&h=600&fit=crop&crop=face",
+    text: "Am găsit albume rare aici.",
+    author: "Cristian P.",
   },
   {
-    image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=800&h=600&fit=crop",
-    text: "Studio",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&h=600&fit=crop&crop=face",
+    text: "Cel mai bun magazin de vinyl!",
+    author: "Elena R.",
   },
   {
-    image: "https://images.unsplash.com/photo-1629276301820-0f3eedc29571?w=800&h=600&fit=crop",
-    text: "Album Art",
+    image: "/testimonial-3.jpg",
+    text: "Atmosferă unică, muzică autentică.",
+    author: "Vlad G.",
   },
   {
-    image: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=800&h=600&fit=crop",
-    text: "Turntable",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&h=600&fit=crop&crop=face",
+    text: "Recomand cu încredere.",
+    author: "Mihai T.",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=600&fit=crop&crop=face",
+    text: "Servicii excelente, mulțumesc!",
+    author: "Ana S.",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&h=600&fit=crop&crop=face",
+    text: "Prețuri corecte, produse originale.",
+    author: "Dan V.",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&h=600&fit=crop&crop=face",
+    text: "O experiență perfectă.",
+    author: "Ioana C.",
   },
 ];
 
@@ -47,6 +70,8 @@ export function PhotoCarousel() {
           textColor="#D4B87A"
           borderRadius={0.05}
           font="bold 24px system-ui"
+          scrollSpeed={2}
+          scrollEase={0.075}
         />
       </div>
     </section>

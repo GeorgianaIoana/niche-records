@@ -1,21 +1,31 @@
 import Link from "next/link";
+import Image from "next/image";
+import { Questrial } from "next/font/google";
 import { SITE_NAME } from "@/lib/constants";
+
+const questrial = Questrial({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/5">
+    <footer className="border-t-[0.5px] border-gold/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-20 lg:py-24">
         {/* Main footer content */}
         <div className="grid grid-cols-2 md:grid-cols-12 gap-12 lg:gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-5 lg:col-span-4">
-            <Link
-              href="/"
-              className="font-serif text-lg italic tracking-wide text-white"
-            >
-              {SITE_NAME}
+            <Link href="/">
+              <Image
+                src="/logo.png"
+                alt="Niche Records"
+                width={200}
+                height={80}
+                className="h-20 w-auto"
+              />
             </Link>
-            <p className="mt-6 text-sm text-gray-500 leading-relaxed max-w-xs">
+            <p className={`${questrial.className} mt-6 text-xs text-white leading-relaxed max-w-xs uppercase tracking-wider`}>
               Curated music for the discerning collector. Vinyl, CDs, and DVDs — carefully selected.
             </p>
           </div>
@@ -25,7 +35,7 @@ export function Footer() {
 
           {/* Shop */}
           <div className="md:col-span-2">
-            <p className="text-xs text-gold mb-6">
+            <p className={`${questrial.className} text-lg text-gold mb-6 uppercase tracking-wider`}>
               Shop
             </p>
             <ul className="space-y-3">
@@ -33,7 +43,7 @@ export function Footer() {
                 <li key={item}>
                   <Link
                     href={item === "All Products" ? "/products" : `/products/${item.toLowerCase()}`}
-                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                    className={`${questrial.className} text-xs text-white hover:text-gold transition-colors uppercase tracking-wider`}
                   >
                     {item}
                   </Link>
@@ -44,7 +54,7 @@ export function Footer() {
 
           {/* Info */}
           <div className="md:col-span-2">
-            <p className="text-xs text-gold mb-6">
+            <p className={`${questrial.className} text-lg text-gold mb-6 uppercase tracking-wider`}>
               Info
             </p>
             <ul className="space-y-3">
@@ -52,7 +62,7 @@ export function Footer() {
                 <li key={item}>
                   <Link
                     href="#"
-                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                    className={`${questrial.className} text-xs text-white hover:text-gold transition-colors uppercase tracking-wider`}
                   >
                     {item}
                   </Link>
@@ -63,10 +73,10 @@ export function Footer() {
 
           {/* Contact */}
           <div className="md:col-span-3 lg:col-span-2">
-            <p className="text-xs text-gold mb-6">
+            <p className={`${questrial.className} text-lg text-gold mb-6 uppercase tracking-wider`}>
               Contact
             </p>
-            <ul className="space-y-3 text-sm text-gray-400">
+            <ul className={`${questrial.className} space-y-3 text-xs text-white uppercase tracking-wider`}>
               <li>
                 <a
                   href="mailto:contact@niche.ro"
@@ -75,26 +85,26 @@ export function Footer() {
                   contact@niche.ro
                 </a>
               </li>
-              <li className="text-gray-500">București, România</li>
+              <li className="text-white">București, România</li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <p className="text-xs text-gray-600">
+          <p className={`${questrial.className} text-sm text-gray-600 tracking-wider`}>
             © {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link
               href="#"
-              className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+              className={`${questrial.className} text-sm text-gray-600 hover:text-gray-400 transition-colors tracking-wider`}
             >
               Privacy Policy
             </Link>
             <Link
               href="#"
-              className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+              className={`${questrial.className} text-sm text-gray-600 hover:text-gray-400 transition-colors tracking-wider`}
             >
               Terms of Service
             </Link>
