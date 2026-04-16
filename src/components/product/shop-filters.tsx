@@ -5,12 +5,18 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ShopFiltersProps {
+  formats: string[];
+  selectedFormats: string[];
+  onFormatChange: (formats: string[]) => void;
   genres: string[];
   selectedGenres: string[];
   onGenreChange: (genres: string[]) => void;
   artists: string[];
   selectedArtists: string[];
   onArtistChange: (artists: string[]) => void;
+  priceRange: [number, number];
+  maxPrice: number;
+  onPriceChange: (range: [number, number]) => void;
   showInStockOnly: boolean;
   onInStockChange: (value: boolean) => void;
   showOnSaleOnly: boolean;
@@ -86,21 +92,123 @@ function ToggleSwitch({
   );
 }
 
+function PriceRangeSlider({
+  min,
+  max,
+  value,
+  onChange,
+}: {
+  min: number;
+  max: number;
+  value: [number, number];
+  onChange: (value: [number, number]) => void;
+}) {
+  // Clamp values to valid range
+  const localMin = Math.max(value[0], min);
+  const localMax = Math.min(value[1], max);
+  const minPercent = ((localMin - min) / (max - min)) * 100;
+  const maxPercent = ((localMax - min) / (max - min)) * 100;
+
+  // Convert bani to RON for display
+  const formatPrice = (bani: number) => Math.round(bani / 100);
+
+  return (
+    <div className="px-1 pb-2">
+      {/* Price labels */}
+      <div className="flex justify-between mb-4 text-sm">
+        <span className="text-gray-400">{formatPrice(localMin)} RON</span>
+        <span className="text-gray-400">{formatPrice(localMax)} RON</span>
+      </div>
+
+      {/* Slider track */}
+      <div className="relative h-0.5 mb-4">
+        {/* Background track */}
+        <div className="absolute inset-0 rounded-full bg-[#1e3a50]" />
+
+        {/* Active range - vibrant blue bar */}
+        <div
+          className="absolute h-full rounded-full"
+          style={{
+            left: `${minPercent}%`,
+            right: `${100 - maxPercent}%`,
+            background: "#3b82f6",
+          }}
+        />
+
+        {/* Min handle */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={100}
+          value={localMin}
+          onChange={(e) => {
+            const newMin = Math.min(Number(e.target.value), localMax - 100);
+            onChange([newMin, localMax]);
+          }}
+          className="absolute w-full h-0.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-[#3b82f6] [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-[#3b82f6]"
+          style={{ zIndex: localMin > max - 100 ? 5 : 3 }}
+        />
+
+        {/* Max handle */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={100}
+          value={Math.min(localMax, max)}
+          onChange={(e) => {
+            const newMax = Math.max(Number(e.target.value), localMin + 100);
+            onChange([localMin, newMax]);
+          }}
+          className="absolute w-full h-0.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-[#3b82f6] [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-[#3b82f6]"
+          style={{ zIndex: 4 }}
+        />
+      </div>
+    </div>
+  );
+}
+
+const FORMAT_LABELS: Record<string, string> = {
+  CD: "CD",
+  DVD: "DVD",
+  "Blu-Ray": "BLU-RAY",
+  Vinyl: "VINYL",
+  MC: "MC",
+  Audiofil: "AUDIOFIL",
+  Accesorii: "ACCESORII",
+};
+
 export function ShopFilters({
+  formats,
+  selectedFormats,
+  onFormatChange,
   genres,
   selectedGenres,
   onGenreChange,
   artists,
   selectedArtists,
   onArtistChange,
+  priceRange,
+  maxPrice,
+  onPriceChange,
   showInStockOnly,
   onInStockChange,
   showOnSaleOnly,
   onSaleChange,
 }: ShopFiltersProps) {
+  const [formatOpen, setFormatOpen] = useState(true);
   const [genreOpen, setGenreOpen] = useState(false);
   const [artistOpen, setArtistOpen] = useState(false);
-  const [priceOpen, setPriceOpen] = useState(false);
+  const [priceOpen, setPriceOpen] = useState(true);
+
+  const toggleFormat = (format: string) => {
+    if (selectedFormats.includes(format)) {
+      onFormatChange(selectedFormats.filter((f) => f !== format));
+    } else {
+      onFormatChange([...selectedFormats, format]);
+    }
+  };
 
   const toggleGenre = (genre: string) => {
     if (selectedGenres.includes(genre)) {
@@ -120,6 +228,30 @@ export function ShopFilters({
 
   return (
     <div>
+      {/* Format Filter */}
+      <FilterSection
+        title="Format"
+        isOpen={formatOpen}
+        onToggle={() => setFormatOpen(!formatOpen)}
+      >
+        {formats.map((format) => (
+          <label
+            key={format}
+            className="flex items-center gap-3 cursor-pointer group py-1"
+          >
+            <input
+              type="checkbox"
+              checked={selectedFormats.includes(format)}
+              onChange={() => toggleFormat(format)}
+              className="w-4 h-4 rounded border-[#3a4a5a] bg-transparent text-gold focus:ring-gold focus:ring-offset-0 cursor-pointer"
+            />
+            <span className="text-sm text-gray-400 group-hover:text-white transition-colors">
+              {FORMAT_LABELS[format] || format}
+            </span>
+          </label>
+        ))}
+      </FilterSection>
+
       {/* Genre Filter */}
       <FilterSection
         title="Genre"
@@ -174,26 +306,12 @@ export function ShopFilters({
         isOpen={priceOpen}
         onToggle={() => setPriceOpen(!priceOpen)}
       >
-        {[
-          { label: "Under 50 RON", value: "0-50" },
-          { label: "50 - 100 RON", value: "50-100" },
-          { label: "100 - 200 RON", value: "100-200" },
-          { label: "Over 200 RON", value: "200+" },
-        ].map((range) => (
-          <label
-            key={range.value}
-            className="flex items-center gap-3 cursor-pointer group py-1 opacity-50"
-          >
-            <input
-              type="checkbox"
-              disabled
-              className="w-4 h-4 rounded border-[#3a4a5a] bg-transparent"
-            />
-            <span className="text-sm text-gray-400">
-              {range.label}
-            </span>
-          </label>
-        ))}
+        <PriceRangeSlider
+          min={0}
+          max={maxPrice}
+          value={priceRange}
+          onChange={onPriceChange}
+        />
       </FilterSection>
 
       {/* Toggle Switches */}

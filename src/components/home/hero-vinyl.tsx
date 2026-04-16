@@ -62,8 +62,8 @@ export function HeroVinyl() {
 
           {/* Subtitle */}
           <p className="text-gray-300 text-lg md:text-xl mb-10 max-w-md tracking-wide">
-            Descoperă colecția noastră de vinyluri, CD-uri și accesorii audio
-            pentru o experiență muzicală autentică.
+            Discover our collection of vinyls, CDs, and audio accessories
+            for an authentic music experience.
           </p>
 
           {/* CTA Buttons - Pill style 3D */}

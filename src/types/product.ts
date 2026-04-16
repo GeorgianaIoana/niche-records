@@ -1,5 +1,5 @@
 export type Category = "cds" | "vinyls" | "dvds";
-export type Format = "CD" | "Vinyl" | "DVD";
+export type Format = "CD" | "DVD" | "Blu-Ray" | "Vinyl" | "MC" | "Audiofil" | "Accesorii";
 
 export interface ProductImage {
   url: string;

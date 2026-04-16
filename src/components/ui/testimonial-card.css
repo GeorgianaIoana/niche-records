@@ -1,0 +1,261 @@
+.tc-card-wrapper {
+  perspective: 600px;
+  transform: translate3d(0, 0, 0.1px);
+  position: relative;
+  touch-action: none;
+  flex-shrink: 0;
+  --card-opacity: 0;
+}
+
+.tc-behind {
+  position: absolute;
+  inset: -20px;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--pointer-x) var(--pointer-y),
+    rgba(212, 184, 122, 0.5) 0%,
+    transparent 60%
+  );
+  filter: blur(40px) saturate(1.2);
+  opacity: calc(0.7 * var(--card-opacity));
+  transition: opacity 300ms ease;
+}
+
+.tc-card-wrapper:hover,
+.tc-card-wrapper.active {
+  --card-opacity: 1;
+}
+
+.tc-card-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.tc-card {
+  width: 280px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  position: relative;
+  box-shadow:
+    rgba(0, 0, 0, 0.6) calc((var(--pointer-from-left) * 10px) - 5px)
+    calc((var(--pointer-from-top) * 15px) - 7px) 25px -8px;
+  transition: transform 0.8s ease;
+  transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+  background: linear-gradient(145deg, rgba(30, 25, 35, 0.95) 0%, rgba(15, 12, 20, 0.98) 100%);
+  backface-visibility: hidden;
+  overflow: hidden;
+  border: 1px solid rgba(212, 184, 122, 0.15);
+}
+
+.tc-card:hover,
+.tc-card.active {
+  transition: none;
+  transform: translateZ(0) rotateX(var(--rotate-y)) rotateY(var(--rotate-x));
+}
+
+.tc-card-shell.entering .tc-card {
+  transition: transform 180ms ease-out;
+}
+
+.tc-inside {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, rgba(40, 30, 50, 0.4) 0%, rgba(212, 184, 122, 0.08) 100%);
+  border-radius: inherit;
+}
+
+.tc-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 215, 140, 0.03) 0%,
+      rgba(212, 184, 122, 0.06) 10%,
+      rgba(180, 150, 100, 0.03) 20%,
+      rgba(212, 184, 122, 0.06) 30%,
+      rgba(255, 215, 140, 0.03) 40%
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 3%,
+      rgba(255, 255, 255, 0.06) 4%,
+      rgba(255, 255, 255, 0.03) 5%,
+      transparent 8%,
+      transparent 10%
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.05) 30%,
+      transparent 70%
+    );
+  background-position:
+    0 var(--background-y),
+    var(--background-x) var(--background-y),
+    center;
+  background-size:
+    300% 300%,
+    200% 200%,
+    100% 100%;
+  mix-blend-mode: overlay;
+}
+
+.tc-card:hover .tc-shine,
+.tc-card.active .tc-shine {
+  opacity: 1;
+}
+
+.tc-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 4;
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    rgba(255, 240, 200, 0.2) 0%,
+    rgba(212, 184, 122, 0.1) 40%,
+    transparent 80%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.tc-card:hover .tc-glare,
+.tc-card.active .tc-glare {
+  opacity: 1;
+}
+
+.tc-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+}
+
+.tc-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  transform:
+    translateX(calc((var(--pointer-from-left) - 0.5) * 8px))
+    translateY(calc((var(--pointer-from-top) - 0.5) * 8px))
+    scale(1.05);
+}
+
+.tc-card:hover .tc-image-container img,
+.tc-card.active .tc-image-container img {
+  transform:
+    translateX(calc((var(--pointer-from-left) - 0.5) * 12px))
+    translateY(calc((var(--pointer-from-top) - 0.5) * 12px))
+    scale(1.1);
+}
+
+.tc-image-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(15, 12, 20, 0.8) 100%
+  );
+  pointer-events: none;
+}
+
+.tc-content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 20px;
+  text-align: center;
+  z-index: 2;
+  transform: translate3d(
+    calc(var(--pointer-from-left) * -4px + 2px),
+    calc(var(--pointer-from-top) * -4px + 2px),
+    0.1px
+  );
+}
+
+.tc-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  font-style: italic;
+  letter-spacing: 0.025em;
+}
+
+.tc-author {
+  color: #D4B87A;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tc-card {
+    width: 260px;
+    height: 350px;
+  }
+
+  .tc-image-container {
+    height: 180px;
+  }
+
+  .tc-content {
+    padding: 20px 16px;
+  }
+
+  .tc-text {
+    font-size: 14px;
+  }
+
+  .tc-author {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tc-card {
+    width: 240px;
+    height: 320px;
+  }
+
+  .tc-image-container {
+    height: 160px;
+  }
+
+  .tc-content {
+    padding: 16px 14px;
+  }
+
+  .tc-text {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .tc-author {
+    font-size: 12px;
+  }
+}

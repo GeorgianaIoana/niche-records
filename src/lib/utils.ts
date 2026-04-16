@@ -4,3 +4,10 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+export function formatPrice(bani: number): string {
+  return new Intl.NumberFormat('ro-RO', {
+    style: 'currency',
+    currency: 'RON',
+  }).format(bani / 100)
+}

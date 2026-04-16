@@ -58,7 +58,7 @@ export function CategoryShowcase() {
         alt=""
         width={450}
         height={450}
-        className="absolute -top-20 -right-10 pointer-events-none opacity-90"
+        className="absolute -top-40 -right-32 pointer-events-none opacity-90"
         aria-hidden="true"
       />
       <Image
@@ -66,7 +66,7 @@ export function CategoryShowcase() {
         alt=""
         width={500}
         height={500}
-        className="absolute -bottom-20 -left-32 pointer-events-none opacity-80"
+        className="absolute -bottom-40 -left-40 pointer-events-none opacity-80"
         aria-hidden="true"
       />
 
@@ -90,7 +90,7 @@ export function CategoryShowcase() {
               backgroundClip: 'text',
             }}
           >
-            Explorează colecția noastră de viniluri, CD-uri și accesorii
+            Explore our collection of vinyls, CDs, and accessories
           </p>
         </div>
 

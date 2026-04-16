@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Questrial, Open_Sans } from "next/font/google";
+import { Questrial } from "next/font/google";
 import { motion, AnimatePresence } from "motion/react";
 import { Mail, MapPin, Phone, Clock, ChevronDown, Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,11 +10,6 @@ import { cn } from "@/lib/utils";
 const questrial = Questrial({
   subsets: ["latin"],
   weight: "400",
-});
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500"],
 });
 
 // FAQ Data
@@ -297,7 +292,7 @@ function FAQItem({
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className={`${openSans.className} pb-5 text-gray-400 text-sm leading-relaxed`}>
+            <p className={`${questrial.className} pb-5 text-gray-400 text-sm leading-relaxed tracking-wider`}>
               {answer}
             </p>
           </motion.div>
@@ -453,7 +448,7 @@ export default function ContactPage() {
             >
               Hai să vorbim despre muzică.
             </h1>
-            <p className={`${openSans.className} text-gray-400 text-lg max-w-2xl leading-relaxed`}>
+            <p className={`${questrial.className} text-gray-400 text-lg max-w-2xl leading-relaxed tracking-wider`}>
               Fie că ai întrebări despre o comandă, cauți un album rar, sau vrei
               să colaborăm — suntem aici pentru tine.
             </p>
@@ -542,7 +537,7 @@ export default function ContactPage() {
                       <h2 className="text-xs uppercase tracking-[0.2em] text-gold mb-3">
                         Trimite-ne un mesaj
                       </h2>
-                      <p className={`${openSans.className} text-gray-500 text-sm`}>
+                      <p className={`${questrial.className} text-gray-500 text-sm tracking-wider`}>
                         Răspundem în maxim 24 de ore în zilele lucrătoare.
                       </p>
                     </div>
@@ -614,7 +609,7 @@ export default function ContactPage() {
                           )}
                         </button>
 
-                        <p className={`${openSans.className} text-gray-600 text-xs mt-6`}>
+                        <p className={`${questrial.className} text-gray-600 text-xs mt-6 tracking-wider`}>
                           Prin trimiterea acestui formular, ești de acord cu
                           politica noastră de confidențialitate.
                         </p>
@@ -684,7 +679,7 @@ export default function ContactPage() {
 
               {/* Response Time Promise */}
               <div className="mt-10 p-5 rounded-lg bg-white/[0.02] border border-white/5">
-                <p className={`${openSans.className} text-sm text-gray-400 leading-relaxed`}>
+                <p className={`${questrial.className} text-sm text-gray-400 leading-relaxed tracking-wider`}>
                   <span className="text-gold">Răspuns rapid garantat.</span>{" "}
                   Ne-am propus să răspundem la toate mesajele în maxim 24 de ore
                   în zilele lucrătoare.
@@ -709,7 +704,7 @@ export default function ContactPage() {
                 <h2 className="text-xs uppercase tracking-[0.2em] text-gold mb-4">
                   Întrebări frecvente
                 </h2>
-                <p className={`${openSans.className} text-gray-500 text-sm leading-relaxed`}>
+                <p className={`${questrial.className} text-gray-500 text-sm leading-relaxed tracking-wider`}>
                   Găsește răspunsuri rapide la cele mai comune întrebări despre
                   comenzi, livrare și produse.
                 </p>

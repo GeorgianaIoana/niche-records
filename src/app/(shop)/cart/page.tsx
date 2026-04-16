@@ -21,7 +21,7 @@ import {
   AlertCircle,
   X,
 } from "lucide-react";
-import { Questrial, Open_Sans } from "next/font/google";
+import { Questrial } from "next/font/google";
 import { motion, AnimatePresence } from "motion/react";
 import { useCart } from "@/store";
 import { formatPrice, cn } from "@/lib/utils";
@@ -29,11 +29,6 @@ import { formatPrice, cn } from "@/lib/utils";
 const questrial = Questrial({
   subsets: ["latin"],
   weight: "400",
-});
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500"],
 });
 
 // Progress Step Component
@@ -428,7 +423,7 @@ function TrustBadge({
       </div>
       <div>
         <p className="text-sm font-medium text-white">{title}</p>
-        <p className={`${openSans.className} text-xs text-gray-500`}>{description}</p>
+        <p className={`${questrial.className} text-xs text-gray-500 tracking-wider`}>{description}</p>
       </div>
     </div>
   );
@@ -454,7 +449,7 @@ function EmptyCart() {
         >
           Coșul tău este gol
         </h1>
-        <p className={`${openSans.className} text-gray-400 mb-8 leading-relaxed`}>
+        <p className={`${questrial.className} text-gray-400 mb-8 leading-relaxed tracking-wider`}>
           Nu ai adăugat încă niciun produs în coș. Descoperă colecția noastră de
           viniluri, CD-uri și DVD-uri.
         </p>
@@ -556,7 +551,7 @@ export default function CartPage() {
           >
             Coșul tău
           </h1>
-          <p className={`${openSans.className} text-gray-400 mt-2`}>
+          <p className={`${questrial.className} text-gray-400 mt-2 tracking-wider`}>
             {totalItems} {totalItems === 1 ? "produs" : "produse"} în coș
           </p>
         </div>
@@ -714,7 +709,7 @@ export default function CartPage() {
               <h3 className="font-heading text-lg font-semibold text-white mb-1">
                 Livrare gratuită pentru comenzi peste 150 lei
               </h3>
-              <p className={`${openSans.className} text-sm text-gray-400`}>
+              <p className={`${questrial.className} text-sm text-gray-400 tracking-wider`}>
                 Adaugă mai multe produse în coș și beneficiezi de transport
                 gratuit în toată țara.
               </p>

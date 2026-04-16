@@ -115,11 +115,11 @@ function SuccessState() {
                 textShadow: '1px 1px 0 rgba(0,0,0,0.4), 2px 2px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2)',
               }}
             >
-              Mulțumim pentru abonare!
+              Thanks for subscribing!
             </h2>
 
             <p className={`${questrial.className} text-gray-400 text-lg leading-relaxed max-w-md tracking-wider`}>
-              Verifică inbox-ul pentru a confirma abonamentul. Te așteptăm în comunitatea Niche Records.
+              Check your inbox to confirm your subscription. Welcome to the Niche Records community.
             </p>
           </div>
 
@@ -150,13 +150,13 @@ export function Newsletter() {
   }
 
   const benefits = [
-    "Lansări noi",
-    "Oferte exclusive",
-    "Articole & povești",
+    "New releases",
+    "Exclusive offers",
+    "Articles & stories",
   ];
 
   return (
-    <section className="py-24 lg:py-32 relative overflow-hidden">
+    <section className="py-24 lg:py-32 relative overflow-hidden border-t-[0.5px] border-gold/20">
       {/* Ambient light effects */}
       <Image
         src="/blue-light.png"
@@ -172,7 +172,7 @@ export function Newsletter() {
           {/* Left: Content & Form */}
           <div className="order-2 lg:order-1">
             {/* Pill Badge */}
-            <span className="inline-block bg-gradient-to-b from-bleu-light/80 to-bleu-medium text-white/90 text-xs font-medium px-5 py-2 rounded-full mb-8 border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+            <span className="inline-block bg-gradient-to-b from-bleu-light/80 to-bleu-medium text-white/90 text-sm font-medium px-6 py-2.5 rounded-full mb-8 border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
               Newsletter
             </span>
 
@@ -183,19 +183,19 @@ export function Newsletter() {
                 textShadow: '1px 1px 0 rgba(0,0,0,0.4), 2px 2px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2)',
               }}
             >
-              Fii primul care află noutățile.
+              Be the first to know
             </h2>
 
             {/* Description */}
             <p className={`${questrial.className} text-gray-400 leading-relaxed mb-12 max-w-md tracking-wider`}>
-              Primești lansări exclusive, oferte speciale și povești din lumea muzicii direct în inbox.
+              Get exclusive releases, special offers, and stories from the world of music directly in your inbox. Be the first to discover new vinyls, limited editions, and personalized recommendations from our team of enthusiasts.
             </p>
 
             {/* Email Form */}
             <form onSubmit={handleSubmit} className="space-y-3 mb-8 max-w-md">
               <input
                 type="email"
-                placeholder="email@exemplu.ro"
+                placeholder="email@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -213,11 +213,11 @@ export function Newsletter() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Se procesează...
+                    Processing...
                   </span>
                 ) : (
                   <>
-                    Abonează-te acum
+                    Subscribe now
                     <ArrowIcon />
                   </>
                 )}

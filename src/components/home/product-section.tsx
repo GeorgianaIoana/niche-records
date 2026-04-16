@@ -1,16 +1,11 @@
 import Link from "next/link";
 import { ProductCard } from "@/components/product";
-import { Questrial, Open_Sans } from "next/font/google";
+import { Questrial } from "next/font/google";
 import type { Product } from "@/types";
 
 const questrial = Questrial({
   subsets: ["latin"],
   weight: "400",
-});
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500"],
 });
 
 interface ProductSectionProps {
@@ -42,7 +37,7 @@ export function ProductSection({
                 {title}
               </h2>
               {subtitle && (
-                <p className={`${openSans.className} mt-3 text-base text-gray-400 max-w-xl`}>
+                <p className={`${questrial.className} mt-3 text-base text-gray-400 max-w-xl tracking-wider`}>
                   {subtitle}
                 </p>
               )}

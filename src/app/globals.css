@@ -292,9 +292,26 @@ body {
   background: var(--color-bleu-light);
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 *:focus-visible {
   outline: 1px solid var(--color-gold);
   outline-offset: 2px;
+}
+
+/* Remove focus outline for auth inputs */
+.no-focus-outline:focus-visible,
+.no-focus-outline:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Simple hover underline */
@@ -394,6 +411,16 @@ body {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* Shimmer effect for cards */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
   }
 }
 

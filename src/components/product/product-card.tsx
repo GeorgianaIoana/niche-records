@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Heart } from "lucide-react";
 import { Questrial } from "next/font/google";
 import { cn, formatPrice } from "@/lib/utils";
-import { useCart } from "@/store";
+import { useCart, useFavorites } from "@/store";
 import type { Product } from "@/types";
 
 const questrial = Questrial({
@@ -19,12 +20,19 @@ interface ProductCardProps {
 
 export function ProductCard({ product, className }: ProductCardProps) {
   const { addItem } = useCart();
+  const { isFavorite, toggleItem } = useFavorites();
+  const isLiked = isFavorite(product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     if (product.inStock) {
       addItem(product);
     }
+  };
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toggleItem(product);
   };
 
   return (
@@ -61,11 +69,28 @@ export function ProductCard({ product, className }: ProductCardProps) {
           )}
         </div>
 
-        {/* Format Badge */}
-        <div className="absolute top-3 right-3">
+        {/* Format Badge & Favorite */}
+        <div className="absolute top-3 right-3 flex items-center gap-2">
           <span className="px-2.5 py-1 bg-[#0a1620]/80 backdrop-blur-sm text-white text-[10px] font-medium uppercase tracking-wider rounded border border-[#1e3a50]/50">
             {product.format}
           </span>
+          <button
+            onClick={handleToggleFavorite}
+            className={cn(
+              "w-8 h-8 rounded-full backdrop-blur-sm flex items-center justify-center transition-all duration-200 active:scale-90",
+              isLiked
+                ? "bg-gold/20 text-gold hover:bg-gold/30"
+                : "bg-[#0a1620]/80 text-gray-400 hover:text-white hover:bg-[#1e3a50] border border-[#1e3a50]/50"
+            )}
+            aria-label={isLiked ? "Remove from wishlist" : "Add to wishlist"}
+          >
+            <Heart
+              className={cn(
+                "w-3.5 h-3.5 transition-transform duration-200",
+                isLiked && "fill-gold scale-110"
+              )}
+            />
+          </button>
         </div>
 
         {/* Add to cart button - appears on hover */}

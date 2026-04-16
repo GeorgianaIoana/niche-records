@@ -9,29 +9,29 @@ const questrial = Questrial({
 const badges = [
   {
     icon: Truck,
-    label: "Transport Gratuit",
-    description: "PENTRU COMENZI PESTE 300 RON",
+    label: "Free Shipping",
+    description: "ON ORDERS OVER $50",
   },
   {
     icon: CreditCard,
-    label: "Plătește în Rate",
-    description: "SISTEM DE FINANȚARE 0% DOBÂNDĂ",
+    label: "Pay in Installments",
+    description: "0% INTEREST FINANCING",
   },
   {
     icon: BookOpen,
-    label: "20+ Titluri",
-    description: "COLECȚII EDITORIALE EXCLUSIVE",
+    label: "20+ Titles",
+    description: "EXCLUSIVE EDITORIAL COLLECTIONS",
   },
   {
     icon: BadgeCheck,
-    label: "Clienți Mulțumiți",
-    description: "EXCELENȚĂ CONFIRMATĂ ZILNIC",
+    label: "Happy Customers",
+    description: "EXCELLENCE CONFIRMED DAILY",
   },
 ];
 
 export function TrustBadges() {
   return (
-    <section className="bg-bleu-dark">
+    <section className="relative -mt-[46px] z-10 bg-bleu-dark">
       <div className="w-full">
         {/* Full-width 3D container */}
         <div
