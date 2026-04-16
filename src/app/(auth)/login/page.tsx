@@ -207,13 +207,19 @@ export default function LoginPage() {
       return;
     }
 
+    // Check demo credentials
+    if (email !== "demo@niche.ro" || password !== "demo123") {
+      setErrors({ email: "Invalid credentials. Use demo account." });
+      return;
+    }
+
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 1500));
     setIsLoading(false);
     setIsSuccess(true);
 
     setTimeout(() => {
-      window.location.href = "/";
+      window.location.href = "/dashboard";
     }, 1500);
   };
 
