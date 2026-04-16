@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, Search, User, Heart } from "lucide-react";
 import { Questrial } from "next/font/google";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { useCart, useFavorites } from "@/store";
+import { getAllProducts } from "@/data/products";
 
 const questrial = Questrial({
   subsets: ["latin"],
@@ -14,11 +16,58 @@ const questrial = Questrial({
 });
 
 export function Header() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const { totalItems: cartTotalItems, toggleCart } = useCart();
   const { totalItems: favoritesTotalItems } = useFavorites();
+
+  const allProducts = getAllProducts();
+
+  // Filter products based on search query
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim() || searchQuery.length < 2) return [];
+    const query = searchQuery.toLowerCase();
+    return allProducts
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.artist.toLowerCase().includes(query)
+      )
+      .slice(0, 6); // Limit to 6 results
+  }, [searchQuery, allProducts]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setSearchOpen(false);
+      setMobileMenuOpen(false);
+      setShowDropdown(false);
+    }
+  };
+
+  const handleResultClick = (slug: string, category: string) => {
+    router.push(`/products/${category}/${slug}`);
+    setSearchQuery("");
+    setShowDropdown(false);
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-bleu-dark/95 backdrop-blur-sm border-b border-white/5">
@@ -62,19 +111,88 @@ export function Header() {
           </nav>
 
           {/* Search Bar - Centered & Large */}
-          <div className="hidden md:flex flex-1 justify-center px-4">
+          <div ref={searchRef} className="hidden md:flex flex-1 justify-center px-4">
             <div className="relative w-full max-w-xl">
-              <input
-                type="text"
-                placeholder="Caută după artist, album, gen..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-6 py-3 text-sm bg-bleu-medium border border-white/10 rounded-full text-white placeholder-gray-400 outline-none focus:border-white/10 transition-all"
-              />
-              <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                style={{ filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))" }}
-              />
+              <form onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  placeholder="Caută după artist, album, gen..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowDropdown(true);
+                  }}
+                  onFocus={() => setShowDropdown(true)}
+                  className="w-full pl-12 pr-6 py-3 text-sm bg-bleu-medium border border-white/10 rounded-full text-white placeholder-gray-400 outline-none focus:border-gold/50 transition-all"
+                />
+                <button type="submit" className="absolute left-4 top-1/2 -translate-y-1/2">
+                  <Search
+                    className="w-5 h-5 text-gray-400 hover:text-gold transition-colors"
+                    style={{ filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))" }}
+                  />
+                </button>
+              </form>
+
+              {/* Search Dropdown */}
+              {showDropdown && searchQuery.length >= 2 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-bleu-dark/98 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50">
+                  {searchResults.length > 0 ? (
+                    <>
+                      <div className="p-2">
+                        {searchResults.map((product) => (
+                          <button
+                            key={product.id}
+                            onClick={() => handleResultClick(product.slug, product.category)}
+                            className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors text-left group"
+                          >
+                            <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-bleu-medium flex-shrink-0">
+                              <Image
+                                src={product.images[0]?.url || "/placeholder.jpg"}
+                                alt={product.name}
+                                fill
+                                className="object-cover"
+                                sizes="48px"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-white font-medium truncate group-hover:text-gold transition-colors">
+                                {product.name}
+                              </p>
+                              <p className="text-xs text-gray-400 truncate">
+                                {product.artist} • {product.format}
+                              </p>
+                            </div>
+                            <span className="text-sm font-medium text-gold">
+                              {formatPrice(product.price)}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* View all results */}
+                      <button
+                        onClick={() => {
+                          router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+                          setSearchQuery("");
+                          setShowDropdown(false);
+                        }}
+                        className="w-full p-3 text-sm text-center text-gold/70 hover:text-gold hover:bg-white/5 border-t border-white/5 transition-colors"
+                      >
+                        Vezi toate rezultatele pentru &quot;{searchQuery}&quot;
+                      </button>
+                    </>
+                  ) : (
+                    <div className="p-6 text-center">
+                      <p className="text-sm text-gray-400">
+                        Niciun rezultat pentru &quot;{searchQuery}&quot;
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Încearcă alt termen de căutare
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -173,7 +291,7 @@ export function Header() {
             searchOpen ? "max-h-16 pb-4" : "max-h-0"
           )}
         >
-          <div className="relative">
+          <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
               placeholder="Caută după artist, album..."
@@ -181,8 +299,10 @@ export function Header() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 text-sm bg-bleu-medium border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-gold/50"
             />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-          </div>
+            <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2">
+              <Search className="w-4 h-4 text-gray-500 hover:text-gold transition-colors" />
+            </button>
+          </form>
         </div>
       </div>
 
@@ -213,7 +333,7 @@ export function Header() {
 
         {/* Mobile Search */}
         <div className="p-4 border-b border-white/5">
-          <div className="relative">
+          <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
               placeholder="Caută după artist, album..."
@@ -221,8 +341,10 @@ export function Header() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-3 text-sm bg-bleu-medium border border-white/10 rounded-full text-white placeholder-gray-500 focus:outline-none focus:border-gold/50"
             />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-          </div>
+            <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2">
+              <Search className="w-4 h-4 text-gray-500 hover:text-gold transition-colors" />
+            </button>
+          </form>
         </div>
 
         {/* Mobile Nav Links */}

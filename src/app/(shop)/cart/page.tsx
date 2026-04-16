@@ -380,7 +380,7 @@ function VoucherSection({
                     setError("");
                   }}
                   placeholder="Introdu codul"
-                  className="flex-1 bg-bleu-dark border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-gold/50 transition-colors"
+                  className="flex-1 bg-bleu-dark border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder:text-gray-500 focus:outline-none"
                 />
                 <button
                   type="submit"

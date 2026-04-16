@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronDown } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { ChevronDown, X } from "lucide-react";
 import { Questrial } from "next/font/google";
 import { ShopProductCard } from "@/components/product/shop-product-card";
 import { ShopFilters } from "@/components/product/shop-filters";
@@ -40,6 +41,9 @@ function sortProducts(products: Product[], sort: string): Product[] {
 }
 
 export default function ShopPage() {
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+
   const [selectedFormats, setSelectedFormats] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<string[]>([]);
@@ -59,6 +63,17 @@ export default function ShopPage() {
 
   const filteredProducts = useMemo(() => {
     let result = allProducts;
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.artist.toLowerCase().includes(query) ||
+        p.genre.some((g) => g.toLowerCase().includes(query)) ||
+        p.format.toLowerCase().includes(query)
+      );
+    }
 
     // Format filter
     if (selectedFormats.length > 0) {
@@ -91,7 +106,7 @@ export default function ShopPage() {
     }
 
     return sortProducts(result, selectedSort);
-  }, [allProducts, selectedFormats, selectedGenres, selectedArtists, priceRange, selectedSort, showInStockOnly, showOnSaleOnly]);
+  }, [allProducts, searchQuery, selectedFormats, selectedGenres, selectedArtists, priceRange, selectedSort, showInStockOnly, showOnSaleOnly]);
 
   // All formats matching nicherecords.ro - always show all options
   const availableFormats = ["CD", "DVD", "Blu-Ray", "Vinyl", "MC", "Audiofil", "Accesorii"];
@@ -126,7 +141,27 @@ export default function ShopPage() {
       <div className="py-8 lg:py-12">
         <div className="max-w-7xl mx-auto px-6 lg:pl-8 lg:pr-12">
           {/* Header */}
-          <div className="flex items-center justify-end mb-10">
+          <div className="flex items-center justify-between mb-10">
+            {/* Search indicator */}
+            {searchQuery && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-400">Results for:</span>
+                <span className="px-3 py-1.5 bg-gold/10 border border-gold/20 rounded-full text-sm text-gold flex items-center gap-2">
+                  &quot;{searchQuery}&quot;
+                  <a
+                    href="/products"
+                    className="hover:text-white transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </a>
+                </span>
+                <span className="text-sm text-gray-500">
+                  ({filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"})
+                </span>
+              </div>
+            )}
+            {!searchQuery && <div />}
+
             {/* Sort dropdown */}
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-400 hidden sm:block">Sort by</span>
