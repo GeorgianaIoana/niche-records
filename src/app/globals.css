@@ -475,6 +475,58 @@ body {
   box-shadow: 0 0 0 rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.2);
 }
 
+/* Spin slow animation for vinyl disc */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* Heart pulse animation for wishlist */
+@keyframes heart-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.animate-heart-pulse {
+  animation: heart-pulse 0.6s ease-in-out;
+}
+
+/* Float animation for trust badges */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+/* Glow pulse for buttons */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(212, 184, 122, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(212, 184, 122, 0.5);
+  }
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

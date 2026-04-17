@@ -26,7 +26,7 @@ export function Footer() {
               />
             </Link>
             <p className={`${questrial.className} mt-6 text-[13px] text-white leading-relaxed max-w-xs uppercase tracking-wider`}>
-              Curated music for the discerning collector. Vinyl, CDs, and DVDs — carefully selected.
+              Curated music for the discerning collector. Vinyl, CDs, and DVDs — carefully selected. Timeless classics.
             </p>
           </div>
 

@@ -165,18 +165,18 @@ export default function DashboardPage() {
 
         <Link
           href="/dashboard/wishlist"
-          className="group relative p-4 rounded-2xl bg-gradient-to-br from-white/[0.05] to-transparent border border-white/[0.06] hover:border-rose-500/20 transition-all duration-300 overflow-hidden"
+          className="group relative p-4 rounded-2xl bg-gradient-to-br from-white/[0.05] to-transparent border border-white/[0.06] hover:border-gold/20 transition-all duration-300 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
           <div className="relative">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500/20 to-rose-500/5 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-              <Heart className="w-4.5 h-4.5 text-rose-400" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Heart className="w-4.5 h-4.5 text-gold" />
             </div>
             <p className="text-2xl font-bold text-white tracking-tight">{mockWishlist.length}</p>
             <p className="text-xs text-gray-500 mt-0.5">În wishlist</p>
             {wishlistAlerts.length > 0 && (
-              <span className="absolute top-3 right-3 px-1.5 py-0.5 text-[10px] font-bold bg-rose-500 text-white rounded-full">
+              <span className="absolute top-3 right-3 px-1.5 py-0.5 text-[10px] font-bold bg-gold text-bleu-dark rounded-full">
                 {wishlistAlerts.length} nou
               </span>
             )}
